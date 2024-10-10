@@ -1,0 +1,16 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::730335218716:user/moshe-user"
+      },
+      "Action": "s3:*",
+      "Resource": [
+        "arn:aws:s3:::moshe-bucket-s3",
+        "arn:aws:s3:::moshe-bucket-s3/*"
+      ]
+    }
+  ]
+}
