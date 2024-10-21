@@ -1,21 +1,8 @@
-# Ignore all files by default
-*
-
-# Allow these specific files
-!aws-auth.yaml
-!eks-cluster.tf
-!vars.tf
-!config.tf.json
-!provider.tf
-
 # Ignore Terraform directories and state files
 .terraform/
 .terraform.lock.hcl
-terraform.tfstate
-terraform.tfstate.backup
 
-# Ignore sensitive variable files
-*.tfvars
+
 
 # Ignore local and OS specific files
 .DS_Store
