@@ -1,9 +1,3 @@
 # Ignore Terraform directories and state files
 .terraform/
 .terraform.lock.hcl
-
-
-
-# Ignore local and OS specific files
-.DS_Store
-Thumbs.db
