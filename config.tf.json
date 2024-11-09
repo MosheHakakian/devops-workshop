@@ -1,0 +1,12 @@
+{
+  "terraform": {
+    "required_version": ">= 1.0",
+    "backend": {
+      "s3": {
+        "bucket": "moshe-bucket-s3",
+        "key": "eks-cluster/terraform.tfstate",
+        "region": "eu-west-1"
+      }
+    }
+  }
+}
