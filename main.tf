@@ -1,64 +1,64 @@
 # Create subnets using a loop with count
-# resource "aws_subnet" "subnets" {
-#  count             = length(var.cidr_blocks)
- # vpc_id            = var.vpc_id
- # cidr_block        = var.cidr_blocks[count.index]
- # availability_zone = var.availability_zones[count.index]
+resource "aws_subnet" "subnets" {
+count             = length(var.cidr_blocks)
+vpc_id            = var.vpc_id
+cidr_block        = var.cidr_blocks[count.index]
+availability_zone = var.availability_zones[count.index]
 
- # tags = {
-  #  Name = var.subnet_names[count.index]
- # }
-# }
+ tags = {
+     Name = var.subnet_names[count.index]
+  }
+ }
 
 # Create Route Table
-#resource "aws_route_table" "main" {
-#  vpc_id = var.vpc_id
+resource "aws_route_table" "main" {
+vpc_id = var.vpc_id
 
-#  tags = {
-#    Name = "moshe-route-table"
-#  }
+tags = {
+    Name = "moshe-route-table"
+}
 
-    # Route for internet-bound traffic through NAT Gateway
- # route {
- #   cidr_block     = "0.0.0.0/0"  # Default route for all outbound traffic
-  #  nat_gateway_id = "nat-0440e3c0e49d26497"  # Replace with your actual NAT Gateway ID
- # }
-#}
+# Route for internet-bound traffic through NAT Gateway
+ route {
+    cidr_block     = "0.0.0.0/0"  # Default route for all outbound traffic
+    nat_gateway_id = "nat-0440e3c0e49d26497"  # Replace with your actual NAT Gateway ID
+ }
+}
 
 # Associate subnets with the route table using a loop
-#resource "aws_route_table_association" "subnet_associations" {
-#  count         = length(var.cidr_blocks)
-#  subnet_id     = aws_subnet.subnets[count.index].id
-#  route_table_id = aws_route_table.main.id
-#}
+resource "aws_route_table_association" "subnet_associations" {
+count         = length(var.cidr_blocks)
+subnet_id     = aws_subnet.subnets[count.index].id
+route_table_id = aws_route_table.main.id
+}
 
 # Create an S3 bucket policy that references the external JSON file
-#resource "aws_s3_bucket_policy" "bucket_policy" {
- # bucket = var.name_bucket
-  #policy = file("bucket-policy.json")
-#}
+resource "aws_s3_bucket_policy" "bucket_policy" {
+bucket = var.name_bucket
+policy = file("bucket-policy.json")
+}
 
 #############
 # Load Balancer Controller IAM Policy
-resource "aws_iam_policy" "load_balancer_controller_policy" {
-  name        = "load-balancer-controller-IAMPolicy"
-  path        = "/"
-  description = "IAM policy for AWS Load Balancer Controller"
+#resource "aws_iam_policy" "load_balancer_controller_policy" {
+#  name        = "load-balancer-controller-IAMPolicy"
+# path        = "/"
+#  description = "IAM policy for AWS Load Balancer Controller"
 
-  policy = file("iam_policy.json") 
-}
+ # policy = file("iam_policy.json") 
+#}
 
 # Create IAM Role for Load Balancer Controller
-resource "aws_iam_role" "load_balancer_controller_role" {
-  name               = "moshe-load-balancer-controller"
-  assume_role_policy = file("lb-trust-policy.json")  # Load JSON trust policy
-}
+#resource "aws_iam_role" "load_balancer_controller_role" {
+#  name               = "moshe-load-balancer-controller"
+#  assume_role_policy = file("lb-trust-policy.json")  # Load JSON trust policy
+#}
 
 # Attach the existing Load Balancer Controller IAM policy
-resource "aws_iam_role_policy_attachment" "lb_controller_policy_attachment" {
-  role       = aws_iam_role.load_balancer_controller_role.name
-  policy_arn = "arn:aws:iam::730335218716:policy/AWSLoadBalancerControllerIAMPolicy"
-}
+#resource "aws_iam_role_policy_attachment" "lb_controller_policy_attachment" {
+#  role       = aws_iam_role.load_balancer_controller_role.name
+#  policy_arn = "arn:aws:iam::730335218716:policy/AWSLoadBalancerControllerIAMPolicy"
+#}
 
 #resource "helm_release" "moshe_load_balancer_controller" {
 #  name       = "moshe-load-balancer-controller"
@@ -143,10 +143,10 @@ module "eks" {
   access_entries = {
     example = {
       kubernetes_groups = []
-      principal_arn     = "arn:aws:iam::730335218716:user/moshe-user"
+      principal_arn     = var.iam_user_arn
       policy_associations = {
         example = {
-          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          policy_arn = var.iam_policy_arn
           access_scope = {
             type       = "cluster"
           }
@@ -155,7 +155,4 @@ module "eks" {
     }
   }
 }
-
-
-
 
