@@ -38,7 +38,7 @@ bucket = var.name_bucket
 policy = file("bucket-policy.json")
 }
 
-#############
+
 # Load Balancer Controller IAM Policy
 #resource "aws_iam_policy" "load_balancer_controller_policy" {
 #  name        = "load-balancer-controller-IAMPolicy"
@@ -71,20 +71,6 @@ policy = file("bucket-policy.json")
 #    name  = "clusterName"
 #    value = var.cluster_name  # Reference your cluster name variable
 #  }
-
-#  set {
- #   name  = "serviceAccount.create"
- #   value = "false"
- # }
-
- # set {
- #   name  = "serviceAccount.name"
- #   value = "aws-load-balancer-controller"  # The service account you created
- # }
-#}
-
-
-#####
 
 resource "aws_route53_record" "moshe_route53_record" {
   zone_id = var.hosted_zone_id
